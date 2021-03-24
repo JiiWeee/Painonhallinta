@@ -1,42 +1,29 @@
 # Tämä on painonhallintasovelluksen pääohjelma
 
 # kirjastojen ja modulien käyttöönotot
-import sanity2
 import laskenta
-
+import kysymys
 # Varsinaisen pääohjelman alku
 
 # työsilmukka, ikuinen silmukka, jossa on poistumistoiminto (ehto true on aina voimassa)
 uusi = 'K'
 while True:
 
-    # Kysytään Käyttäjältä paino
-    tapahtui_virhe = True
-    
-    while tapahtui_virhe == True:
-        paino_str = input('paino (kg)?')
-        tulokset = sanity2.liukuluvuksi(paino_str)
+    # tehdään kysymykset modulin kysymys.py funktiota käyttämällä
+    paino = kysymys.kysy_liukuluku('paino(kg)', 30, 500)
+    pituus = kysymys.kysy_liukuluku('pituus (cm)', 100, 300)
+    ika = kysymys.kysy_liukuluku('ikä (v)', 3 ,125)
+    sukupuoli = kysymys.kysy_liukuluku('sukupuolinaine: 0, mies:1', 0 , 1)
 
-        #katsotaan onko virhekoodi 0, ja tallennetaan arvo muuttujaan
-        if tulokset[0] == 0:
-            paino = tulokset[2]
-            tarkistettu_paino =  sanity2.rajatarkistus(paino, 40, 300)
+    # Lasketaan ja tulostetaan painoindeksi
+    bmi = laskenta.bmi(paino, pituus)
+    print('Henkilön painoindeksi on:',round(bmi, 1))
 
-            # Katsotaan onko arvo sallitujen rajojen sisällä tutkimalla virhekoodia
-            if tarkistettu_paino[0] == 0:
-                tapahtui_virhe = False
-            else:
-                # Tulostetaan virheilmoitus
-                print(tarkistettu_paino[1])
-                    
-        #jos virhekoodi ei ole 0, tulostetaan virheilmoitus
-        else:
-            print(tulokset[1])
+    # lasketaan ja tulostetaan kehonrasvaprosentti
+    rasvaprosentti = laskenta.rasvaprosentti(bmi, ika, sukupuoli)
+    print('Laskennallinen kehonrasva prosentti on:', round(rasvaprosentti, 1))
 
-    # testi
-    print ('ja paino oli', paino , 'kg')
-    
     # poistuminen ikuisesta silmukasta
-    uusi = input('lasketaanko uuden henkilön rasvaprosentti? (K/E)')
-    if uusi == 'E':
+    uusi = input('lasketaanko uuden henkilön rasvaprosentti? (K/e)')
+    if uusi.upper() == 'E':
         break
